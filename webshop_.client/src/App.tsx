@@ -7,7 +7,7 @@ import Categories from "./page/categories";
 import Search from "./page/search";
 import Contact from "./page/contact";
 import Regisztracio from "./page/regisztracio";
-import "../src/styles/index.css"; // fontos!
+import "./styles/index.css"; // fontos!
 
 
 function App() {
@@ -15,7 +15,9 @@ function App() {
         <div className="bg-gray-50 min-h-screen">
             {/* Fejléc */}
             <Header />
-
+            <div className="bg-red-500 text-white p-4 text-center">
+            Ez piros háttér, ha működik a Tailwind!
+            </div>
             {/* Útvonalak kezelése */}
             <Routes>
                 <Route path="/" element={

@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
-import "../src/styles/index.css"; // fontos!
+import "./styles/index.css"; // fontos!
 import App from "./App";
 
 

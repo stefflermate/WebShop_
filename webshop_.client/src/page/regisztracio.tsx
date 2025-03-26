@@ -35,9 +35,7 @@ const RegisterForm: React.FC = () => {
     return (
 
         <div className="min-h-screen bg-gray-50 py-10 px-4">
-            <div className="bg-red-500 text-white p-4 text-center">
-                Ez piros háttér, ha mûködik a Tailwind!
-            </div>
+            
 
             <form
                 onSubmit={handleSubmit}
