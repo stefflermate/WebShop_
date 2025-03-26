@@ -2,6 +2,8 @@
 using Microsoft.EntityFrameworkCore;
 using WebShop_.Server.Data;
 using WebShop_.Server.Models;
+using BCrypt.Net;
+
 
 namespace WebShop_.Server.Controllers
 {
@@ -54,5 +56,54 @@ namespace WebShop_.Server.Controllers
                 .Include(c => c.SubCategories)
                 .ToListAsync();
         }
+
+        [HttpPost("register")]
+        public async Task<IActionResult> Register([FromBody] RegisterDto registerDto)
+        {
+            if (await _context.Users.AnyAsync(u => u.Email == registerDto.Email))
+            {
+                return BadRequest("Ez az email már foglalt.");
+            }
+
+            var user = new User
+            {
+                Name = registerDto.Username,
+                Email = registerDto.Email,
+                Role = registerDto.IsCompany ? "Retailer" : "Customer",
+                ZipCode = registerDto.Zipcode,
+                CreatedAt = DateTime.Now,
+                PasswordHash = BCrypt.Net.BCrypt.HashPassword(registerDto.Password)
+            };
+
+            _context.Users.Add(user);
+            await _context.SaveChangesAsync();
+
+            // Ha cég, akkor a Seller táblába is szúrunk
+            if (registerDto.IsCompany)
+            {
+                var seller = new Seller
+                {
+                    UserId = user.Id,
+                    Address = registerDto.Address!
+                };
+
+                _context.Sellers.Add(seller);
+                await _context.SaveChangesAsync();
+            }
+
+            return Ok(new { Message = "Sikeres regisztráció" });
+        }
+
+        // DTO osztály a bejövő adatokhoz
+        public class RegisterDto
+        {
+            public string Username { get; set; } = string.Empty;
+            public string Email { get; set; } = string.Empty;
+            public string Password { get; set; } = string.Empty;
+            public string Zipcode { get; set; } = string.Empty;
+            public string? Address { get; set; }
+            public bool IsCompany { get; set; }
+        }
+
     }
 }

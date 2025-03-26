@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+Ôªøimport React, { useState } from "react";
 
 type FormData = {
     username: string;
@@ -27,10 +27,38 @@ const RegisterForm: React.FC = () => {
         }));
     };
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        console.log("Regisztr·ciÛs adatok:", { ...formData, szerep: isCompany ? "CÈg" : "Vevı" });
+
+        const payload = {
+            username: formData.username,
+            email: formData.email,
+            password: formData.password,
+            zipcode: formData.zipcode,
+            address: isCompany ? formData.address : null,
+            isCompany,
+        };
+
+        try {
+            const res = await fetch("https://localhost:7253/api/Users/register", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(payload),
+            });
+
+            if (res.ok) {
+                alert("Sikeres regisztr√°ci√≥!");
+            } else {
+                const errorData = await res.json();
+                alert("Hiba: " + errorData.message || "Ismeretlen hiba");
+            }
+        } catch (error) {
+            alert("H√°l√≥zati hiba: " + error);
+        }
     };
+
 
     return (
         <div className="min-h-screen bg-gray-50 py-10 px-4">
@@ -41,7 +69,7 @@ const RegisterForm: React.FC = () => {
                 
 
                 <div>
-                    <label className="block font-semibold mb-1">Felhaszn·lÛnÈv</label>
+                    <label className="block font-semibold mb-1">Felhaszn√°l√≥n√©v</label>
                     <input
                         type="text"
                         name="username"
@@ -65,7 +93,7 @@ const RegisterForm: React.FC = () => {
                 </div>
 
                 <div>
-                    <label className="block font-semibold mb-1">Ir·nyÌtÛsz·m</label>
+                    <label className="block font-semibold mb-1">Ir√°ny√≠t√≥sz√°m</label>
                     <input
                         type="text"
                         name="zipcode"
@@ -78,7 +106,7 @@ const RegisterForm: React.FC = () => {
 
                 {isCompany && (
                     <div>
-                        <label className="block font-semibold mb-1">CÌm</label>
+                        <label className="block font-semibold mb-1">C√≠m</label>
                         <input
                             type="text"
                             name="address"
@@ -91,7 +119,7 @@ const RegisterForm: React.FC = () => {
                 )}
 
                 <div>
-                    <label className="block font-semibold mb-1">JelszÛ</label>
+                    <label className="block font-semibold mb-1">Jelsz√≥</label>
                     <input
                         type="password"
                         name="password"
@@ -102,10 +130,10 @@ const RegisterForm: React.FC = () => {
                     />
                 </div>
 
-                {/* Toggle kapcsolÛ Vevı/CÈg kˆzˆtt */}
+                {/* Toggle kapcsol√≥ Vev≈ë/C√©g k√∂z√∂tt */}
                 <div className="flex flex-col items-center mb-4">
                     <div className="flex items-center justify-between w-full mb-2">
-                        <span className={`text-sm font-medium ${!isCompany ? "text-blue-600" : "text-gray-500"}`}>Vevı</span>
+                        <span className={`text-sm font-medium ${!isCompany ? "text-blue-600" : "text-gray-500"}`}>Vev≈ë</span>
                         <div className="relative inline-block w-12 mr-2 align-middle select-none">
                             <input
                                 type="checkbox"
@@ -124,7 +152,7 @@ const RegisterForm: React.FC = () => {
                                 ></span>
                             </label>
                         </div>
-                        <span className={`text-sm font-medium ${isCompany ? "text-blue-600" : "text-gray-500"}`}>CÈg</span>
+                        <span className={`text-sm font-medium ${isCompany ? "text-blue-600" : "text-gray-500"}`}>C√©g</span>
                     </div>
                 </div>
 
@@ -132,7 +160,7 @@ const RegisterForm: React.FC = () => {
                     type="submit"
                     className="bg-green-500 text-white py-2 rounded hover:bg-green-600 font-semibold transition"
                 >
-                    Regisztr·ciÛ
+                    Regisztr√°ci√≥
                 </button>
             </form>
         </div>
