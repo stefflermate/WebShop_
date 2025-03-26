@@ -35,33 +35,13 @@ const RegisterForm: React.FC = () => {
     return (
 
         <div className="min-h-screen bg-gray-50 py-10 px-4">
-            <div className="bg-red-500 text-white p-4 text-center">
-                Ez piros háttér, ha mûködik a Tailwind!
-            </div>
 
             <form
                 onSubmit={handleSubmit}
                 className="max-w-lg mx-auto bg-white p-8 rounded shadow-md flex flex-col gap-5"
             >
-                {/* Vevõ / Cég választó */}
-                <div className="flex justify-center gap-4 mb-4">
-                    <button
-                        type="button"
-                        onClick={() => setIsCompany(false)}
-                        className={`w-1/2 py-2 rounded font-semibold ${!isCompany ? "bg-blue-500 text-white" : "bg-gray-200"
-                            }`}
-                    >
-                        Vevõ
-                    </button>
-                    <button
-                        type="button"
-                        onClick={() => setIsCompany(true)}
-                        className={`w-1/2 py-2 rounded font-semibold ${isCompany ? "bg-blue-500 text-white" : "bg-gray-200"
-                            }`}
-                    >
-                        Cég
-                    </button>
-                </div>
+                
+
 
                 <div>
                     <label className="block font-semibold mb-1">Felhasználónév</label>
@@ -123,6 +103,13 @@ const RegisterForm: React.FC = () => {
                         className="w-full border border-gray-300 p-2 rounded"
                         required
                     />
+                </div>
+                <div className="toggle-switch">
+                    <label className="switch">
+                        <input type="checkbox" checked={isCompany} onChange={() => setIsCompany(!isCompany)} />
+                        <span className="slider round"></span>
+                    </label>
+                    <span>{ "Cég"}</span>
                 </div>
 
                 <button
