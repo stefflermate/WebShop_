@@ -33,33 +33,12 @@ const RegisterForm: React.FC = () => {
     };
 
     return (
-
         <div className="min-h-screen bg-gray-50 py-10 px-4">
-            
-
             <form
                 onSubmit={handleSubmit}
                 className="max-w-lg mx-auto bg-white p-8 rounded shadow-md flex flex-col gap-5"
             >
-                {/* Vevõ / Cég választó */}
-                <div className="flex justify-center gap-4 mb-4">
-                    <button
-                        type="button"
-                        onClick={() => setIsCompany(false)}
-                        className={`w-1/2 py-2 rounded font-semibold ${!isCompany ? "bg-blue-500 text-white" : "bg-gray-200"
-                            }`}
-                    >
-                        Vevõ
-                    </button>
-                    <button
-                        type="button"
-                        onClick={() => setIsCompany(true)}
-                        className={`w-1/2 py-2 rounded font-semibold ${isCompany ? "bg-blue-500 text-white" : "bg-gray-200"
-                            }`}
-                    >
-                        Cég
-                    </button>
-                </div>
+                
 
                 <div>
                     <label className="block font-semibold mb-1">Felhasználónév</label>
@@ -121,6 +100,32 @@ const RegisterForm: React.FC = () => {
                         className="w-full border border-gray-300 p-2 rounded"
                         required
                     />
+                </div>
+
+                {/* Toggle kapcsoló Vevõ/Cég között */}
+                <div className="flex flex-col items-center mb-4">
+                    <div className="flex items-center justify-between w-full mb-2">
+                        <span className={`text-sm font-medium ${!isCompany ? "text-blue-600" : "text-gray-500"}`}>Vevõ</span>
+                        <div className="relative inline-block w-12 mr-2 align-middle select-none">
+                            <input
+                                type="checkbox"
+                                name="userType"
+                                id="userType"
+                                checked={isCompany}
+                                onChange={() => setIsCompany(!isCompany)}
+                                className="sr-only peer"
+                            />
+                            <label
+                                htmlFor="userType"
+                                className="block h-6 overflow-hidden bg-gray-300 rounded-full cursor-pointer peer-checked:bg-blue-500 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-200"
+                            >
+                                <span
+                                    className={`absolute top-0 left-0 block w-6 h-6 rounded-full bg-white shadow transform transition-transform duration-200 ease-in-out ${isCompany ? 'translate-x-6' : 'translate-x-0'}`}
+                                ></span>
+                            </label>
+                        </div>
+                        <span className={`text-sm font-medium ${isCompany ? "text-blue-600" : "text-gray-500"}`}>Cég</span>
+                    </div>
                 </div>
 
                 <button
