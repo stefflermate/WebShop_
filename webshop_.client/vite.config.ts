@@ -24,6 +24,7 @@ export default defineConfig(({ mode }) => {
         fs.mkdirSync(baseFolder, { recursive: true });
     }
 
+
     // Ha nincs tanúsítvány, generálunk egyet
     if (!fs.existsSync(certFilePath) || !fs.existsSync(keyFilePath)) {
         console.log("🔹 SSL tanúsítvány generálása...");
@@ -66,5 +67,6 @@ export default defineConfig(({ mode }) => {
                 cert: fs.readFileSync(certFilePath),
             }
         }
+        
     };
 });
