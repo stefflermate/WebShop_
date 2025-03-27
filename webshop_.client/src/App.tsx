@@ -6,6 +6,7 @@ import Header from "./components/Header";
 import Categories from "./page/categories";
 import Search from "./page/search";
 import Contact from "./page/contact";
+import Login from "./page/login";
 import Regisztracio from "./page/regisztracio";
 import "./styles/index.css"; // fontos!
 
@@ -30,7 +31,9 @@ function App() {
                 <Route path="/categories" element={<Categories />} />
                 <Route path="/search" element={<Search />} />
                 <Route path="/contact" element={<Contact />} />
-                <Route path="/regisztracio" element={<Regisztracio /> } />
+                <Route path="/regisztracio" element={<Regisztracio />} />
+                <Route path="/login" element={<Login />} />
+
             </Routes>
         </div>
     );

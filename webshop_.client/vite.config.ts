@@ -54,20 +54,20 @@ export default defineConfig(({ mode }) => {
             }
         },
         server: {
-            proxy: {
-                '^/api/': {  // Minden API hívás továbbítása
-                    target,
-                    changeOrigin: true,
-                    secure: false,
-                }
-            },
-            port: parseInt(env.DEV_SERVER_PORT || '49200'),
             https: {
                 key: fs.readFileSync(keyFilePath),
                 cert: fs.readFileSync(certFilePath),
-            }
-        },
-        
-        
+            },
+            port: parseInt(env.DEV_SERVER_PORT || '49200'),
+            proxy: process.env.NODE_ENV === "development"
+                ? {
+                    "^/api/": {
+                        target: "https://localhost:7253",
+                        changeOrigin: true,
+                        secure: false,
+                    },
+                }
+                : undefined,
+        },       
     };
 });

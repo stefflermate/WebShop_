@@ -105,5 +105,43 @@ namespace WebShop_.Server.Controllers
             public bool IsCompany { get; set; }
         }
 
+        [HttpPost("login")]
+        public async Task<IActionResult> Login([FromBody] LoginDto loginDto)
+        {
+            try
+            {
+                var user = await _context.Users
+                    .Include(u => u.Seller)
+                    .FirstOrDefaultAsync(u => u.Email == loginDto.Email);
+
+                if (user == null || !BCrypt.Net.BCrypt.Verify(loginDto.Password, user.PasswordHash))
+                {
+                    return Unauthorized("Hibás email vagy jelszó.");
+                }
+
+                return Ok(new
+                {
+                    user.Id,
+                    user.Name,
+                    user.Email,
+                    user.Role
+                });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("🔥 Login error: " + ex.Message);
+                Console.WriteLine("📄 StackTrace: " + ex.StackTrace);
+                return StatusCode(500, "Belső hiba történt a bejelentkezés során.");
+            }
+        }
+
+
+        public class LoginDto
+        {
+            public string Email { get; set; } = string.Empty;
+            public string Password { get; set; } = string.Empty;
+        }
+
+
     }
 }
