@@ -40,7 +40,7 @@ const RegisterForm: React.FC = () => {
         };
 
         try {
-            const res = await fetch("https://localhost:7253/api/Users/register", {
+            const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/Users/products/register`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

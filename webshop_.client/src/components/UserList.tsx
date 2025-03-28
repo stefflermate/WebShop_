@@ -13,7 +13,7 @@ const UserList: React.FC = () => {
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
-        fetch("http://localhost:5070/api/users")
+        fetch(`${import.meta.env.VITE_API_BASE_URL}/Users/products`)
             .then(res => {
                 if (!res.ok) throw new Error("Hálózati hiba történt!");
                 return res.json();
