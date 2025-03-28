@@ -12,8 +12,8 @@ using WebShop_.Server.Data;
 namespace WebShop_.Server.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250312110737_IgnoreExistingCategoriesTable")]
-    partial class IgnoreExistingCategoriesTable
+    [Migration("20250328101230_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

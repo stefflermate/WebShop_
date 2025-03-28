@@ -44,11 +44,10 @@ var app = builder.Build();
 app.UseCors(MyAllowSpecificOrigins);
 
 // 7️⃣ Fejlesztői eszközök bekapcsolása (Swagger)
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+
+app.UseSwagger();
+app.UseSwaggerUI();
+
 
 // 8️⃣ Engedélyezett végpontok és API beállítások
 app.UseAuthorization();

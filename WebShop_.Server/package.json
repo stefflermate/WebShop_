@@ -1,7 +1,14 @@
-{
+﻿{
   "devDependencies": {
     "autoprefixer": "^10.4.20",
     "postcss": "^8.5.3",
     "tailwindcss": "^4.0.9"
+  },
+  "ConnectionStrings": {
+    "ConnectionStrings": {
+      "DefaultConnection": "Server=tcp:webshop-sqlserver2.database.windows.net,1433;Initial Catalog=webshop;Persist Security Info=False;User ID=sqladmin;Password=20.MKv.08;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"
+    }
+
   }
+
 }
