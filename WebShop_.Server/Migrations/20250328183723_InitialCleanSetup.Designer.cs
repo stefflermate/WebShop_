@@ -12,8 +12,8 @@ using WebShop_.Server.Data;
 namespace WebShop_.Server.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250312110737_IgnoreExistingCategoriesTable")]
-    partial class IgnoreExistingCategoriesTable
+    [Migration("20250328183723_InitialCleanSetup")]
+    partial class InitialCleanSetup
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -38,12 +38,7 @@ namespace WebShop_.Server.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<int?>("ParentId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("ParentId");
 
                     b.ToTable("Categories", (string)null);
                 });
@@ -56,9 +51,6 @@ namespace WebShop_.Server.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("CategoryId")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
@@ -67,17 +59,23 @@ namespace WebShop_.Server.Migrations
                         .HasMaxLength(150)
                         .HasColumnType("nvarchar(150)");
 
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(10,2)");
+
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
 
                     b.Property<int>("SellerId")
                         .HasColumnType("int");
 
+                    b.Property<int>("SubCategoryId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("CategoryId");
-
                     b.HasIndex("SellerId");
+
+                    b.HasIndex("SubCategoryId");
 
                     b.ToTable("Products", (string)null);
                 });
@@ -94,6 +92,29 @@ namespace WebShop_.Server.Migrations
                     b.HasKey("UserId");
 
                     b.ToTable("Sellers", (string)null);
+                });
+
+            modelBuilder.Entity("WebShop_.Server.Models.SubCategory", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CategoryId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CategoryId");
+
+                    b.ToTable("SubCategories", (string)null);
                 });
 
             modelBuilder.Entity("WebShop_.Server.Models.User", b =>
@@ -135,33 +156,23 @@ namespace WebShop_.Server.Migrations
                     b.ToTable("Users", (string)null);
                 });
 
-            modelBuilder.Entity("WebShop_.Server.Models.Category", b =>
-                {
-                    b.HasOne("WebShop_.Server.Models.Category", "Parent")
-                        .WithMany("SubCategories")
-                        .HasForeignKey("ParentId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.Navigation("Parent");
-                });
-
             modelBuilder.Entity("WebShop_.Server.Models.Product", b =>
                 {
-                    b.HasOne("WebShop_.Server.Models.Category", "Category")
-                        .WithMany()
-                        .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("WebShop_.Server.Models.Seller", "Seller")
                         .WithMany()
                         .HasForeignKey("SellerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Category");
+                    b.HasOne("WebShop_.Server.Models.SubCategory", "SubCategory")
+                        .WithMany("Products")
+                        .HasForeignKey("SubCategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Seller");
+
+                    b.Navigation("SubCategory");
                 });
 
             modelBuilder.Entity("WebShop_.Server.Models.Seller", b =>
@@ -175,9 +186,25 @@ namespace WebShop_.Server.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("WebShop_.Server.Models.SubCategory", b =>
+                {
+                    b.HasOne("WebShop_.Server.Models.Category", "Category")
+                        .WithMany("SubCategories")
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Category");
+                });
+
             modelBuilder.Entity("WebShop_.Server.Models.Category", b =>
                 {
                     b.Navigation("SubCategories");
+                });
+
+            modelBuilder.Entity("WebShop_.Server.Models.SubCategory", b =>
+                {
+                    b.Navigation("Products");
                 });
 
             modelBuilder.Entity("WebShop_.Server.Models.User", b =>

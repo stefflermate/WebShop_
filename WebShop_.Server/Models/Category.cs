@@ -11,10 +11,11 @@ namespace WebShop_.Server.Models
         [Required]
         public required string Name { get; set; }
 
-        public int? ParentId { get; set; }
-        public Category? Parent { get; set; }
+        // ❌ Ezeket el kell távolítani:
+        // public int? ParentId { get; set; }
+        // public Category? Parent { get; set; }
 
-        public ICollection<Category>? SubCategories { get; set; }
+        // ✅ Marad csak a SubCategory kapcsolat
+        public ICollection<SubCategory>? SubCategories { get; set; }
     }
-
 }

@@ -44,7 +44,7 @@ namespace WebShop_.Server.Controllers
         {
             return await _context.Products
                 .Include(p => p.Seller).ThenInclude(s => s.User)
-                .Include(p => p.Category)
+                .Include(p => p.SubCategory).ThenInclude(sc => sc.Category)
                 .ToListAsync();
         }
 
