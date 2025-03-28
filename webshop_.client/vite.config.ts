@@ -7,8 +7,12 @@ import child_process from 'child_process';
 import { env } from 'process';
 
 // Betöltjük a .env fájlt
+// ... importok ugyanazok
+
 export default defineConfig(({ mode }) => {
     process.env = { ...process.env, ...loadEnv(mode, process.cwd()) };
+
+    const isLocal = process.env.GENERATE_SSL === 'true';
 
     const baseFolder =
         env.APPDATA !== undefined && env.APPDATA !== ''
@@ -19,32 +23,32 @@ export default defineConfig(({ mode }) => {
     const certFilePath = path.join(baseFolder, `${certificateName}.pem`);
     const keyFilePath = path.join(baseFolder, `${certificateName}.key`);
 
-    // Ellenőrizzük, hogy a mappák léteznek-e
-    if (!fs.existsSync(baseFolder)) {
-        fs.mkdirSync(baseFolder, { recursive: true });
-    }
+    if (isLocal) {
+        // Ellenőrizzük, hogy a mappák léteznek-e
+        if (!fs.existsSync(baseFolder)) {
+            fs.mkdirSync(baseFolder, { recursive: true });
+        }
 
+        // Ha nincs tanúsítvány, generálunk egyet
+        if (!fs.existsSync(certFilePath) || !fs.existsSync(keyFilePath)) {
+            console.log("🔹 SSL tanúsítvány generálása...");
+            const result = child_process.spawnSync('dotnet', [
+                'dev-certs',
+                'https',
+                '--export-path',
+                certFilePath,
+                '--format',
+                'Pem',
+                '--no-password',
+            ], { stdio: 'inherit' });
 
-    // Ha nincs tanúsítvány, generálunk egyet
-    if (!fs.existsSync(certFilePath) || !fs.existsSync(keyFilePath)) {
-        console.log("🔹 SSL tanúsítvány generálása...");
-        const result = child_process.spawnSync('dotnet', [
-            'dev-certs',
-            'https',
-            '--export-path',
-            certFilePath,
-            '--format',
-            'Pem',
-            '--no-password',
-        ], { stdio: 'inherit' });
-
-        if (result.status !== 0) {
-            throw new Error("❌ Hiba: Nem sikerült létrehozni az SSL tanúsítványt.");
+            if (result.status !== 0) {
+                throw new Error("❌ Hiba: Nem sikerült létrehozni az SSL tanúsítványt.");
+            }
         }
     }
 
-    const backendPort = env.ASPNETCORE_HTTPS_PORT || 5070; // ASP.NET Core backend port
-    const target = `https://localhost:${backendPort}`;
+    const backendPort = env.ASPNETCORE_HTTPS_PORT || 5070;
 
     return {
         plugins: [react()],
@@ -54,10 +58,10 @@ export default defineConfig(({ mode }) => {
             }
         },
         server: {
-            https: {
+            https: isLocal ? {
                 key: fs.readFileSync(keyFilePath),
                 cert: fs.readFileSync(certFilePath),
-            },
+            } : false,
             port: parseInt(env.DEV_SERVER_PORT || '49200'),
             proxy: process.env.NODE_ENV === "development"
                 ? {
@@ -68,6 +72,6 @@ export default defineConfig(({ mode }) => {
                     },
                 }
                 : undefined,
-        },       
+        },
     };
 });
