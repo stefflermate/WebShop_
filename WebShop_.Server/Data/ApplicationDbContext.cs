@@ -29,14 +29,22 @@ namespace WebShop_.Server.Data
             });
 
             // SELLER
+            // SELLER
             modelBuilder.Entity<Seller>(entity =>
             {
                 entity.ToTable("Sellers");
                 entity.HasKey(s => s.UserId);
+
+                entity.Property(s => s.Address).IsRequired();
+                entity.Property(s => s.PhoneNumber).IsRequired().HasMaxLength(50);
+                entity.Property(s => s.OpeningHours).IsRequired().HasMaxLength(255);
+                entity.Property(s => s.Description).HasMaxLength(2000);
+
                 entity.HasOne(s => s.User)
                       .WithOne(u => u.Seller)
                       .HasForeignKey<Seller>(s => s.UserId);
             });
+
 
             // CATEGORY
             modelBuilder.Entity<Category>(entity =>
@@ -61,13 +69,17 @@ namespace WebShop_.Server.Data
             });
 
             // PRODUCT
+            // PRODUCT
             modelBuilder.Entity<Product>(entity =>
             {
                 entity.ToTable("Products");
                 entity.HasKey(p => p.Id);
-                entity.Property(p => p.Name).HasMaxLength(150);
+
+                entity.Property(p => p.Name).HasMaxLength(150).IsRequired();
                 entity.Property(p => p.Price).HasColumnType("decimal(10,2)");
                 entity.Property(p => p.Quantity).IsRequired();
+                entity.Property(p => p.Unit).IsRequired().HasMaxLength(50);
+                entity.Property(p => p.ImageUrl).HasMaxLength(1000); // opcionális kép
 
                 entity.HasOne(p => p.Seller)
                       .WithMany()
@@ -77,6 +89,7 @@ namespace WebShop_.Server.Data
                       .WithMany(sc => sc.Products)
                       .HasForeignKey(p => p.SubCategoryId);
             });
+
         }
     }
 }

@@ -14,15 +14,18 @@ namespace WebShop_.Server.Models
         public int SubCategoryId { get; set; }
         public SubCategory? SubCategory { get; set; }
 
-
         [Required]
         public required string Name { get; set; }
-        public decimal Price { get; set; }
 
+        public decimal Price { get; set; }
 
         public int Quantity { get; set; }
 
+        [Required]
+        public required string Unit { get; set; }
+
+        public string? ImageUrl { get; set; }
+
         public DateTime CreatedAt { get; set; } = DateTime.Now;
     }
-
 }

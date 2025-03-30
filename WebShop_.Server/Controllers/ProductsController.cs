@@ -18,15 +18,18 @@ namespace WebShop_.Server.Controllers
 
         // GET: api/Products
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Product>>> GetProducts()
+        public async Task<ActionResult<IEnumerable<Product>>> GetProducts([FromQuery] int page = 1, [FromQuery] int pageSize = 20)
         {
-            return await _context.Products
-                .Include(p => p.SubCategory)
-                .ThenInclude(sc => sc.Category)
-                .Include(p => p.Seller)
-                .ThenInclude(s => s.User)
+            var products = await _context.Products
+                .Include(p => p.SubCategory).ThenInclude(sc => sc.Category)
+                .Include(p => p.Seller).ThenInclude(s => s.User)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
                 .ToListAsync();
+
+            return Ok(products);
         }
+
 
         // GET: api/Products/5
         [HttpGet("{id}")]
@@ -97,6 +100,18 @@ namespace WebShop_.Server.Controllers
             await _context.SaveChangesAsync();
 
             return NoContent();
+        }
+
+        [HttpGet("by-subcategory/{subcategoryId}")]
+        public async Task<ActionResult<IEnumerable<Product>>> GetProductsBySubCategory(int subcategoryId)
+        {
+            var products = await _context.Products
+                .Where(p => p.SubCategoryId == subcategoryId)
+                .Include(p => p.SubCategory).ThenInclude(sc => sc.Category)
+                .Include(p => p.Seller).ThenInclude(s => s.User)
+                .ToListAsync();
+
+            return Ok(products);
         }
     }
 }

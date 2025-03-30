@@ -25,7 +25,6 @@ function App() {
                     <div>
                         <h2 className="text-2xl font-semibold mb-4">📍 Jelenlegi helyzeted</h2>
                         <GoogleMapComponent />
-                        <ProductList />
                     </div>
                 } />
                 <Route path="/categories" element={<Categories />} />

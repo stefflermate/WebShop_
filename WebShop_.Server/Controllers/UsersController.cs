@@ -84,7 +84,9 @@ namespace WebShop_.Server.Controllers
                 var seller = new Seller
                 {
                     UserId = user.Id,
-                    Address = registerDto.Address!
+                    Address = registerDto.Address!,
+                    PhoneNumber = registerDto.PhoneNumber!,
+                    OpeningHours = registerDto.OpeningHours!
                 };
 
                 _context.Sellers.Add(seller);
@@ -103,7 +105,12 @@ namespace WebShop_.Server.Controllers
             public string Zipcode { get; set; } = string.Empty;
             public string? Address { get; set; }
             public bool IsCompany { get; set; }
+
+            // ➕ Újak kötelezőként:
+            public string PhoneNumber { get; set; } = string.Empty;
+            public string OpeningHours { get; set; } = string.Empty;
         }
+
 
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginDto loginDto)
