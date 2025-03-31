@@ -1,6 +1,7 @@
 ﻿import React from "react";
 import { Link } from "react-router-dom";
 import { useUser } from "../context/UserContext";
+import { Button } from "@/components/ui/button"
 
 export default function Header() {
     const { user, setUser } = useUser();
@@ -16,6 +17,8 @@ export default function Header() {
                     <Link to="/categories" className="hover:text-green-600 transition-colors">Termékeink</Link>
                     <Link to="/search" className="hover:text-green-600 transition-colors">Keresés</Link>
                     <Link to="/contact" className="hover:text-green-600 transition-colors">Kapcsolat</Link>
+                    <Button variant="outline">Button</Button>
+
                 </div>
 
                 <div className="flex gap-3 items-center">

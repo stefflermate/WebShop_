@@ -5,6 +5,8 @@ import fs from 'fs';
 import path from 'path';
 import child_process from 'child_process';
 import { env } from 'process';
+import path from "path"
+import tailwindcss from "@tailwindcss/vite"
 
 // Betöltjük a .env fájlt
 export default defineConfig(({ mode }) => {
@@ -47,7 +49,7 @@ export default defineConfig(({ mode }) => {
     const target = `https://localhost:${backendPort}`;
 
     return {
-        plugins: [react()],
+        plugins: [react(), tailwindcss()],
         resolve: {
             alias: {
                 '@': fileURLToPath(new URL('./src', import.meta.url))

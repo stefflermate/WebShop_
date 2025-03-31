@@ -6,7 +6,7 @@ import Header from "./components/Header";
 import Categories from "./page/categories";
 import Search from "./page/search";
 import Contact from "./page/contact";
-import Login from "./page/login";
+import Login from "./page/Login";
 import Regisztracio from "./page/regisztracio";
 import "./styles/index.css"; // fontos!
 

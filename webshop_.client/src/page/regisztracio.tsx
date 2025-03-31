@@ -1,4 +1,5 @@
 ﻿import React, { useState } from "react";
+import { Input } from "@/components/ui/input";
 
 type FormData = {
     username: string;
@@ -82,12 +83,12 @@ const RegisterForm: React.FC = () => {
 
                 <div>
                     <label className="block font-semibold mb-1">Email</label>
-                    <input
+                    <Input
                         type="email"
                         name="email"
                         value={formData.email}
                         onChange={handleChange}
-                        className="w-full border border-gray-300 p-2 rounded"
+                        placeholder="Email"
                         required
                     />
                 </div>
