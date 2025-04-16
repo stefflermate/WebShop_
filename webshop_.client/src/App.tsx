@@ -16,9 +16,6 @@ function App() {
         <div className="bg-gray-50 min-h-screen">
             {/* Fejléc */}
             <Header />
-            <div className="bg-red-500 text-white p-4 text-center">
-            Ez piros háttér, ha működik a Tailwind!
-            </div>
             {/* Útvonalak kezelése */}
             <Routes>
                 <Route path="/" element={

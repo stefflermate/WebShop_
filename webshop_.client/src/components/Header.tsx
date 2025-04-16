@@ -17,7 +17,6 @@ export default function Header() {
                     <Link to="/categories" className="hover:text-green-600 transition-colors">Termékeink</Link>
                     <Link to="/search" className="hover:text-green-600 transition-colors">Keresés</Link>
                     <Link to="/contact" className="hover:text-green-600 transition-colors">Kapcsolat</Link>
-                    <Button variant="outline">Button</Button>
 
                 </div>
 
