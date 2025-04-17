@@ -8,7 +8,7 @@ export default function Login() {
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
     const navigate = useNavigate();
-    const { setUser } = useUser();
+    const { setUser, setSeller } = useUser();
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -31,8 +31,19 @@ export default function Login() {
 
             const user = await res.json();
             localStorage.setItem("user", JSON.stringify(user));
-            setUser(user); // context frissítése
-            navigate("/"); // vissza főoldalra
+            setUser(user);
+
+            // Ha eladó, lekérjük a Seller adatokat is
+            if (user.role === "Retailer") {
+                const sellerRes = await fetch(`${apiBase}/Sellers/${user.id}`);
+                if (sellerRes.ok) {
+                    const sellerData = await sellerRes.json();
+                    localStorage.setItem("seller", JSON.stringify(sellerData));
+                    setSeller(sellerData);
+                }
+            }
+
+            navigate("/");
         } catch (err) {
             setError("Hiba történt a bejelentkezés során.");
         }

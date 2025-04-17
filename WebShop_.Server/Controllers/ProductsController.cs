@@ -113,5 +113,18 @@ namespace WebShop_.Server.Controllers
 
             return Ok(products);
         }
+
+        [HttpGet("by-seller/{sellerId}")]
+        public async Task<ActionResult<IEnumerable<Product>>> GetProductsBySeller(int sellerId)
+        {
+            var products = await _context.Products
+                .Where(p => p.SellerId == sellerId)
+                .Include(p => p.SubCategory).ThenInclude(sc => sc.Category)
+                .Include(p => p.Seller).ThenInclude(s => s.User)
+                .ToListAsync();
+
+            return Ok(products);
+        }
+
     }
 }

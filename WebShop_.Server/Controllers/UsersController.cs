@@ -141,6 +141,60 @@ namespace WebShop_.Server.Controllers
                 return StatusCode(500, "Belső hiba történt a bejelentkezés során.");
             }
         }
+        
+        [HttpGet("/api/Sellers/{userId}")]
+        public async Task<IActionResult> GetSellerByUserId(int userId)
+        {
+            var seller = await _context.Sellers
+                .Include(s => s.User)
+                .FirstOrDefaultAsync(s => s.UserId == userId);
+
+            if (seller == null)
+                return NotFound();
+
+            return Ok(new
+            {
+                seller.Address,
+                seller.PhoneNumber,
+                seller.OpeningHours,
+                seller.Description
+            });
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateUserAndSeller(int id, [FromBody] UpdateUserDto dto)
+        {
+            var user = await _context.Users.Include(u => u.Seller).FirstOrDefaultAsync(u => u.Id == id);
+            if (user == null)
+                return NotFound("Felhasználó nem található.");
+
+            // User adatok frissítése
+            user.Name = dto.Name;
+            user.Email = dto.Email;
+
+            // Seller adatok frissítése (ha van)
+            if (user.Seller != null)
+            {
+                user.Seller.Address = dto.Address;
+                user.Seller.PhoneNumber = dto.PhoneNumber;
+                user.Seller.OpeningHours = dto.OpeningHours;
+                user.Seller.Description = dto.Description;
+            }
+
+            await _context.SaveChangesAsync();
+            return Ok("Sikeres frissítés");
+        }
+
+        public class UpdateUserDto
+        {
+            public string Name { get; set; } = string.Empty;
+            public string Email { get; set; } = string.Empty;
+            public string Address { get; set; } = string.Empty;
+            public string PhoneNumber { get; set; } = string.Empty;
+            public string OpeningHours { get; set; } = string.Empty;
+            public string? Description { get; set; }
+        }
+
 
 
         public class LoginDto

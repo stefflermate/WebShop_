@@ -14,9 +14,16 @@ export default function Header() {
                 </Link>
 
                 <div className="flex gap-6 text-sm sm:text-base">
-                    <Link to="/categories" className="hover:text-green-600 transition-colors">Termékeink</Link>
-                    <Link to="/search" className="hover:text-green-600 transition-colors">Keresés</Link>
-                    <Link to="/contact" className="hover:text-green-600 transition-colors">Kapcsolat</Link>
+                    <Link to="/categories" className="hover:text-green-600 transition-colors">Termékek</Link>
+                    <Link to="/search" className=" transition-colors">Keresés</Link>
+                    {user?.role === "Retailer" && (
+                        <>
+                        <Link to="/contact" className="hover:text-green-600 transition-colors">Kapcsolat</Link>
+                        <Link to="/sellerProducts" className="hover:text-green-600 transition-colors">Termékeim</Link>
+                        </>
+                    )}
+                    
+                    
 
                 </div>
 
