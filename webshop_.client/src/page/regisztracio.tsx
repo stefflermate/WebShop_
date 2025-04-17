@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+Ôªøimport React, { useState } from "react";
+import { Input } from "@/components/ui/input";
 
 type FormData = {
     username: string;
@@ -27,44 +28,49 @@ const RegisterForm: React.FC = () => {
         }));
     };
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        console.log("Regisztr·ciÛs adatok:", { ...formData, szerep: isCompany ? "CÈg" : "Vevı" });
+
+        const payload = {
+            username: formData.username,
+            email: formData.email,
+            password: formData.password,
+            zipcode: formData.zipcode,
+            address: isCompany ? formData.address : null,
+            isCompany,
+        };
+
+        try {
+            const res = await fetch("https://localhost:7253/api/Users/register", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(payload),
+            });
+
+            if (res.ok) {
+                alert("Sikeres regisztr√°ci√≥!");
+            } else {
+                const errorData = await res.json();
+                alert("Hiba: " + errorData.message || "Ismeretlen hiba");
+            }
+        } catch (error) {
+            alert("H√°l√≥zati hiba: " + error);
+        }
     };
 
+
     return (
-
         <div className="min-h-screen bg-gray-50 py-10 px-4">
-            <div className="bg-red-500 text-white p-4 text-center">
-                Ez piros h·ttÈr, ha m˚kˆdik a Tailwind!
-            </div>
-
             <form
                 onSubmit={handleSubmit}
                 className="max-w-lg mx-auto bg-white p-8 rounded shadow-md flex flex-col gap-5"
             >
-                {/* Vevı / CÈg v·lasztÛ */}
-                <div className="flex justify-center gap-4 mb-4">
-                    <button
-                        type="button"
-                        onClick={() => setIsCompany(false)}
-                        className={`w-1/2 py-2 rounded font-semibold ${!isCompany ? "bg-blue-500 text-white" : "bg-gray-200"
-                            }`}
-                    >
-                        Vevı
-                    </button>
-                    <button
-                        type="button"
-                        onClick={() => setIsCompany(true)}
-                        className={`w-1/2 py-2 rounded font-semibold ${isCompany ? "bg-blue-500 text-white" : "bg-gray-200"
-                            }`}
-                    >
-                        CÈg
-                    </button>
-                </div>
+                
 
                 <div>
-                    <label className="block font-semibold mb-1">Felhaszn·lÛnÈv</label>
+                    <label className="block font-semibold mb-1">Felhaszn√°l√≥n√©v</label>
                     <input
                         type="text"
                         name="username"
@@ -77,18 +83,18 @@ const RegisterForm: React.FC = () => {
 
                 <div>
                     <label className="block font-semibold mb-1">Email</label>
-                    <input
+                    <Input
                         type="email"
                         name="email"
                         value={formData.email}
                         onChange={handleChange}
-                        className="w-full border border-gray-300 p-2 rounded"
+                        placeholder="Email"
                         required
                     />
                 </div>
 
                 <div>
-                    <label className="block font-semibold mb-1">Ir·nyÌtÛsz·m</label>
+                    <label className="block font-semibold mb-1">Ir√°ny√≠t√≥sz√°m</label>
                     <input
                         type="text"
                         name="zipcode"
@@ -101,7 +107,7 @@ const RegisterForm: React.FC = () => {
 
                 {isCompany && (
                     <div>
-                        <label className="block font-semibold mb-1">CÌm</label>
+                        <label className="block font-semibold mb-1">C√≠m</label>
                         <input
                             type="text"
                             name="address"
@@ -114,7 +120,7 @@ const RegisterForm: React.FC = () => {
                 )}
 
                 <div>
-                    <label className="block font-semibold mb-1">JelszÛ</label>
+                    <label className="block font-semibold mb-1">Jelsz√≥</label>
                     <input
                         type="password"
                         name="password"
@@ -125,11 +131,37 @@ const RegisterForm: React.FC = () => {
                     />
                 </div>
 
+                {/* Toggle kapcsol√≥ Vev≈ë/C√©g k√∂z√∂tt */}
+                <div className="flex flex-col items-center mb-4">
+                    <div className="flex items-center justify-between w-full mb-2">
+                        <span className={`text-sm font-medium ${!isCompany ? "text-blue-600" : "text-gray-500"}`}>Vev≈ë</span>
+                        <div className="relative inline-block w-12 mr-2 align-middle select-none">
+                            <input
+                                type="checkbox"
+                                name="userType"
+                                id="userType"
+                                checked={isCompany}
+                                onChange={() => setIsCompany(!isCompany)}
+                                className="sr-only peer"
+                            />
+                            <label
+                                htmlFor="userType"
+                                className="block h-6 overflow-hidden bg-gray-300 rounded-full cursor-pointer peer-checked:bg-blue-500 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-200"
+                            >
+                                <span
+                                    className={`absolute top-0 left-0 block w-6 h-6 rounded-full bg-white shadow transform transition-transform duration-200 ease-in-out ${isCompany ? 'translate-x-6' : 'translate-x-0'}`}
+                                ></span>
+                            </label>
+                        </div>
+                        <span className={`text-sm font-medium ${isCompany ? "text-blue-600" : "text-gray-500"}`}>C√©g</span>
+                    </div>
+                </div>
+
                 <button
                     type="submit"
                     className="bg-green-500 text-white py-2 rounded hover:bg-green-600 font-semibold transition"
                 >
-                    Regisztr·ciÛ
+                    Regisztr√°ci√≥
                 </button>
             </form>
         </div>

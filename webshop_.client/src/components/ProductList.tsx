@@ -1,42 +1,50 @@
-import React, { useEffect, useState } from "react";
+ï»¿import React, { useEffect, useState } from "react";
 
 interface Product {
     id: number;
     name: string;
     quantity: number;
-    category: { name: string };
+    unit: string;
+    price: number;
+    imageUrl?: string;
+    subCategory: { category: { name: string } };
     seller: { user: { name: string } };
 }
 
-const ProductList: React.FC = () => {
+interface Props {
+    subcategoryId: number;
+}
+
+const ProductList: React.FC<Props> = ({ subcategoryId }) => {
     const [products, setProducts] = useState<Product[]>([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        fetch("https://localhost:7253/api/Users/products")
+        setLoading(true);
+        fetch(`https://localhost:7253/api/Products/by-subcategory/${subcategoryId}`)
             .then(res => res.json())
             .then((data: Product[]) => {
                 setProducts(data);
                 setLoading(false);
             });
-    }, []);
+    }, [subcategoryId]);
 
-    if (loading) return <div className="text-center mt-10 text-gray-500">Betöltés...</div>;
+    if (loading) return <div className="text-center mt-10 text-gray-500">BetÃ¶ltÃ©s...</div>;
 
     return (
         <div className="bg-white p-5 rounded-xl shadow-md">
-            <h2 className="text-xl font-semibold mb-4">Terméklista</h2>
-            <ul className="divide-y divide-gray-300">
+            <h2 className="text-xl font-semibold mb-4">TalÃ¡latok</h2>
+            <ul className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
                 {products.map(product => (
-                    <li key={product.id} className="py-4 flex justify-between items-center">
-                        <div>
-                            <h3 className="text-lg font-semibold">{product.name}</h3>
-                            <p className="text-sm text-gray-600">Kategória: {product.category.name}</p>
-                            <p className="text-sm text-gray-600">Eladó: {product.seller.user.name}</p>
-                            <p className="font-bold">Raktáron: {product.quantity} db</p>
-                        </div>
-                        <button className="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg">
-                            Kosárba
+                    <li key={product.id} className="border p-4 rounded-lg shadow-sm">
+                        <img src={product.imageUrl} alt={product.name} className="h-40 object-cover w-full mb-2 rounded-md" />
+                        <h3 className="font-semibold text-lg">{product.name}</h3>
+                        <p className="text-sm text-gray-500">EladÃ³: {product.seller.user.name}</p>
+                        <p className="text-sm text-gray-500">KategÃ³ria: {product.subCategory.category.name}</p>
+                        <p className="font-bold">{product.price} Ft / {product.unit}</p>
+                        <p className="text-sm text-gray-600">KÃ©szleten: {product.quantity} db</p>
+                        <button className="mt-2 bg-blue-600 hover:bg-blue-700 text-white py-1 px-4 rounded">
+                            KosÃ¡rba
                         </button>
                     </li>
                 ))}

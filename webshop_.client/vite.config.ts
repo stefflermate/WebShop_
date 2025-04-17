@@ -5,8 +5,8 @@ import fs from 'fs';
 import path from 'path';
 import child_process from 'child_process';
 import { env } from 'process';
+import tailwindcss from "@tailwindcss/vite"
 
-// Betöltjük a .env fájlt
 export default defineConfig(({ mode }) => {
     process.env = { ...process.env, ...loadEnv(mode, process.cwd()) };
 
@@ -19,12 +19,10 @@ export default defineConfig(({ mode }) => {
     const certFilePath = path.join(baseFolder, `${certificateName}.pem`);
     const keyFilePath = path.join(baseFolder, `${certificateName}.key`);
 
-    // Ellenőrizzük, hogy a mappák léteznek-e
     if (!fs.existsSync(baseFolder)) {
         fs.mkdirSync(baseFolder, { recursive: true });
     }
 
-    // Ha nincs tanúsítvány, generálunk egyet
     if (!fs.existsSync(certFilePath) || !fs.existsSync(keyFilePath)) {
         console.log("🔹 SSL tanúsítvány generálása...");
         const result = child_process.spawnSync('dotnet', [
@@ -42,29 +40,36 @@ export default defineConfig(({ mode }) => {
         }
     }
 
-    const backendPort = env.ASPNETCORE_HTTPS_PORT || 5070; // ASP.NET Core backend port
-    const target = `https://localhost:${backendPort}`;
-
     return {
-        plugins: [react()],
+        plugins: [react(), tailwindcss()],
         resolve: {
             alias: {
                 '@': fileURLToPath(new URL('./src', import.meta.url))
             }
         },
         server: {
-            proxy: {
-                '^/api/': {  // Minden API hívás továbbítása
-                    target,
-                    changeOrigin: true,
-                    secure: false,
-                }
-            },
-            port: parseInt(env.DEV_SERVER_PORT || '49200'),
             https: {
                 key: fs.readFileSync(keyFilePath),
                 cert: fs.readFileSync(certFilePath),
-            }
-        }
+            },
+            port: 5173,
+            strictPort: true, // ne váltson másik portra
+            watch: {
+                usePolling: true, // Windows fix
+            },
+            hmr: {
+                protocol: 'wss',
+                host: 'localhost',
+            },
+            proxy: process.env.NODE_ENV === "development"
+                ? {
+                    "^/api/": {
+                        target: "https://localhost:7253",
+                        changeOrigin: true,
+                        secure: false,
+                    },
+                }
+                : undefined,
+        },
     };
 });

@@ -1,10 +1,24 @@
-import React from "react";
+Ôªøimport React, { useState } from "react";
+import CategoryMenu from "../components/CategoryMenu";
+import ProductList from "../components/ProductList";
 
-export default function Categories() {
+const SearchPage = () => {
+    const [subcategoryId, setSubcategoryId] = useState<number | null>(null);
+
     return (
-        <div className="container mx-auto p-4">
-            <h1 className="text-2xl font-bold">TermÈkeink</h1>
-            <p>Itt tal·lhatÛk a webshop termÈkei.</p>
+        <div className="flex">
+            <div className="w-64">
+                <CategoryMenu onSelectSubCategory={id => setSubcategoryId(id)} />
+            </div>
+            <div className="flex-1 p-4">
+                {subcategoryId ? (
+                    <ProductList subcategoryId={subcategoryId} />
+                ) : (
+                    <p className="text-gray-500">V√°lassz alkateg√≥ri√°t bal oldalt a term√©kek megtekint√©s√©hez.</p>
+                )}
+            </div>
         </div>
     );
-}
+};
+
+export default SearchPage;

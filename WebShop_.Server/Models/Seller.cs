@@ -12,7 +12,15 @@ namespace WebShop_.Server.Models
         [Required]
         public required string Address { get; set; }
 
+        [Required]
+        public required string PhoneNumber { get; set; }
+
+        [Required]
+        public required string OpeningHours { get; set; }
+
+        [MaxLength(2000)]
+        public string? Description { get; set; }
+
         public User User { get; set; }
     }
-
 }
