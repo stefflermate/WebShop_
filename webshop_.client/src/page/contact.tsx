@@ -3,8 +3,8 @@ import React from "react";
 export default function About() {
     return (
         <div className="container mx-auto p-4">
-            <h1 className="text-2xl font-bold">RÛlunk</h1>
-            <p>Ez egy webshop inform·ciÛs oldala.</p>
+            <h1 className="text-2xl font-bold">Rolunk</h1>
+            <p>inform√°ci√≥</p>
         </div>
     );
 }
