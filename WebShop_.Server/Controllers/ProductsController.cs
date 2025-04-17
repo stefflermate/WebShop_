@@ -119,12 +119,14 @@ namespace WebShop_.Server.Controllers
         {
             var products = await _context.Products
                 .Where(p => p.SellerId == sellerId)
-                .Include(p => p.SubCategory).ThenInclude(sc => sc.Category)
-                .Include(p => p.Seller).ThenInclude(s => s.User)
+                .Include(p => p.SubCategory) // ⬅️ lehet, hogy ez hiányzik
                 .ToListAsync();
 
             return Ok(products);
         }
+
+        
+
 
     }
 }

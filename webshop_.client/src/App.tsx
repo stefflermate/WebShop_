@@ -6,6 +6,7 @@ import Header from "./components/Header";
 import Categories from "./page/categories";
 import Search from "./page/search";
 import Contact from "./page/contact";
+import SellerProducts from "./page/sellerProducts"; // vagy ahol a fájlod van
 import Login from "./page/Login";
 import Regisztracio from "./page/regisztracio";
 import "./styles/index.css"; // fontos!
@@ -27,6 +28,7 @@ function App() {
                 <Route path="/categories" element={<Categories />} />
                 <Route path="/search" element={<Search />} />
                 <Route path="/contact" element={<Contact />} />
+                <Route path="/sellerProducts" element={<SellerProducts />} />
                 <Route path="/regisztracio" element={<Regisztracio />} />
                 <Route path="/login" element={<Login />} />
 

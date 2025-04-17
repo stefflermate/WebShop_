@@ -15,8 +15,7 @@ export default function About() {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-
-        if (!user) return;
+        if (!user || !seller) return;
 
         try {
             const res = await fetch(`https://localhost:7253/api/Users/${user.id}`, {
@@ -34,8 +33,16 @@ export default function About() {
 
             if (res.ok) {
                 alert("Sikeresen frissítve!");
+
                 const updatedUser = { ...user, name, email };
-                const updatedSeller = { address, phoneNumber, openingHours, description };
+                const updatedSeller = {
+                    userId: seller.userId, // ⬅️ ez volt eddig a hiányzó mező
+                    address,
+                    phoneNumber,
+                    openingHours,
+                    description,
+                };
+
                 localStorage.setItem("user", JSON.stringify(updatedUser));
                 localStorage.setItem("seller", JSON.stringify(updatedSeller));
                 setUser(updatedUser);

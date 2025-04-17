@@ -9,6 +9,7 @@ type User = {
 };
 
 type Seller = {
+    userId: number; // ⬅️ EZ KELL
     address: string;
     phoneNumber: string;
     openingHours: string;
